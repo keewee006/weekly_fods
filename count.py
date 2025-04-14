@@ -1,5 +1,10 @@
+def count_case(s):
+    upper = sum(1 for c in s if c.isupper())
+    lower = sum(1 for c in s if c.islower())
+    return upper, lower
+
+# Test
 s = input("Enter a string: ")
-letters = sum(c.isalpha() for c in s)
-digits = sum(c.isdigit() for c in s)
-print("Letters:", letters)
-print("Digits:", digits)
+u, l = count_case(s)
+print("Uppercase letters:", u)
+print("Lowercase letters:", l)
