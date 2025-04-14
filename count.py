@@ -1,10 +1,10 @@
-def count_case(s):
-    upper = sum(1 for c in s if c.isupper())
-    lower = sum(1 for c in s if c.islower())
-    return upper, lower
+def count_file_stats(filename):
+    with open(filename, 'r') as file:
+        lines = file.readlines()
+        line_count = len(lines)
+        word_count = sum(len(line.split()) for line in lines)
+        char_count = sum(len(line) for line in lines)
+        print(f"Lines: {line_count}, Words: {word_count}, Characters: {char_count}")
 
-# Test
-s = input("Enter a string: ")
-u, l = count_case(s)
-print("Uppercase letters:", u)
-print("Lowercase letters:", l)
+# test
+count_file_stats("test.txt")
