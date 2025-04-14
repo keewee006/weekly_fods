@@ -1,41 +1,39 @@
-'''Employee class and write/read from CSV with exception handling'''
-import csv
+import pandas as pd
 
-class Employee:
-    def __init__(self, empid, name, address, contact, spouse, children, salary):
-        self.empid = empid
-        self.name = name
-        self.address = address
-        self.contact = contact
-        self.spouse = spouse
-        self.children = children
-        self.salary = salary
+data = {
+    'EmployeeID': [101, 102, 103, 104, 105],
+    'Name': ['ram', 'hari', 'sita', 'panna', 'raj'],
+    'Department': ['IT', 'HR', 'IT', 'Finance', 'HR'],
+    'Age': [30, 28, 35, 40, 25],
+    'Salary': [70000, 60000, 80000, 90000, 55000],
+    'JoinDate': pd.to_datetime(['2018-07-15', '2020-03-10', '2016-11-01', '2012-05-25', '2021-06-01']),
+    'ExperienceYears': [5, 3, 7, 11, 2]
+}
 
-    def to_list(self):
-        return [self.empid, self.name, self.address, self.contact, self.spouse, self.children, self.salary]
+df = pd.DataFrame(data)
 
-def save_employee(emp_list, filename='employees.csv'):
-    try:
-        with open(filename, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(['EmpID', 'Name', 'Address', 'Contact', 'Spouse', 'Children', 'Salary'])
-            for emp in emp_list:
-                writer.writerow(emp.to_list())
-        print("Employee data saved.")
-    except Exception as e:
-        print("Error:", e)
+print("\nName and Salary:\n", df[['Name', 'Salary']])
 
-def read_employees(filename='employees.csv'):
-    try:
-        with open(filename, 'r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                print('\t'.join(row))
-    except FileNotFoundError:
-        print("File not found.")
+print("\nEmployees in IT:\n", df[df['Department'] == 'IT'])
 
-# Example
-emp1 = Employee("001", "Ram", "Pokhara", "98000000", "Rita", 2, 50000)
-emp2 = Employee("002", "sita", "Lalitpur", "98001111", "Ravi", 0, 45000)
-save_employee([emp1, emp2])
-read_employees()
+print("\nEmployees older than 30:\n", df[df['Age'] > 30])
+print("\nAverage Salary per Department:\n", df.groupby('Department')['Salary'].mean())
+
+print("\nEmployee count per Department:\n", df['Department'].value_counts())
+
+df['Bonus'] = df['Salary'] * 0.10
+print("\nWith Bonus Column:\n", df)
+
+df['Department'] = df['Department'].replace('HR', 'Human Resources')
+print("\nDepartment Replaced:\n", df)
+
+longest_tenure = df[df['JoinDate'] == df['JoinDate'].min()]
+print("\nEmployee with Longest Tenure:\n", longest_tenure)
+
+df['SalaryCategory'] = df['Salary'].apply(lambda x: 'High' if x > 75000 else 'Low')
+print("\nWith Salary Category:\n", df)
+
+df = df.drop_duplicates(subset='EmployeeID')
+print("\nAfter Removing Duplicate EmployeeIDs:\n", df)
+
+print("\nMedian Age:", df['Age'].median())
